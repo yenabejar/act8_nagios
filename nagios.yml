@@ -1,0 +1,49 @@
+---
+- hosts: CentOSx,Ubuntux
+  become: true
+  gather_facts: true
+  pre_tasks:
+
+  - name: Update Repo Index (CentOS)
+    tags: always
+    yum:
+      name: "*"
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "9"
+
+  - name: Update Repo Index (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Ensure Necessary Packages
+    package:
+      name:
+        - gcc
+        - make
+        - wget
+
+  - name: Create User for Nagios
+    user:
+      name: nagios1
+      shell: /bin/bash
+      system: yes
+      create_home: yes
+
+  - name: Create Group for Nagios
+    group:
+      name: nagios_group1
+      system: yes
+
+- hosts: Ubuntux
+  become: true
+  roles:
+    -  ubuntu_nagios
+
+- hosts: CentOSx
+  become: true
+  roles:
+    -  centos_nagios
