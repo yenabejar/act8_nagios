@@ -1,0 +1,19 @@
+---
+- name: Install EPEL Repository
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install Nagios on CentOS
+  yum:
+    name:
+      - nagios
+      - nagios-plugins-all
+      - nrpe
+    state: present
+
+- name: Enable and Start Nagios
+  systemd:
+    name: nagios
+    state: started
+    enabled: yes

@@ -1,0 +1,23 @@
+---
+- name: Installing Nagios on Ubuntu
+  apt:
+    name:
+      - nagios3
+      - nagios-nrpe-plugin
+      - nagios-plugins
+    state: present
+    update_cache: yes
+
+- name: Start & Enable Nagios on Ubuntu
+  systemd:
+    name: nagios3
+    state: started
+    enabled: yes
+
+- name: Start & Enable Apache/HTTPD service on Ubuntu
+  service:
+    name: apache2
+    enabled: yes
+    state: started
+  when: ansible_distribution == "Ubuntu"
+    
